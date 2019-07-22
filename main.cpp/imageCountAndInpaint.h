@@ -27,4 +27,7 @@ public:
 
 	//·ÖË®ÁëËã·¨
 	void watershedImageTest();
+
+	//Í¼ÏñĞŞ²¹
+	void imageInpaint();
 };

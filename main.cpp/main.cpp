@@ -22,5 +22,6 @@ int main() {
 	//imageCount.findContoursEdge();
 	//imageCount.watershedImageTest();
 	//imageCount.helloworld();
+	imageCount.imageInpaint();
 
 }

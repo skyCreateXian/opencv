@@ -14,9 +14,11 @@ Mat g_threshold_out;
 Mat src_copy = g_src.clone();
 vector<vector<Point>> g_vContours;
 vector<Vec4i> g_vHierarchy;
+Mat src1, inpaintMask;
 Point prevPt(-1, -1);
 
 static void on_Mouse(int event, int x, int y, int flags, void*);
+static void on_Mouse2(int event, int x, int y, int flags, void*);
 
 int imageCountAndInpaint::helloworld() {
 	printf("helloworld");
@@ -228,6 +230,30 @@ void imageCountAndInpaint::watershedImageTest() {
 	}
 }
 
+void imageCountAndInpaint::imageInpaint() {
+	Mat src = imread("2.jpg", -1);
+	src1 = src.clone();
+	inpaintMask = Mat::zeros(src1.size(), CV_8U);
+
+	imshow("原图", src1);
+
+	//设置鼠标回调
+	setMouseCallback("原图", on_Mouse2, 0);
+	//轮询处理
+	while (1) {
+		char c = (char)waitKey();
+
+		if (c == 27)
+			break;
+		if (c == '1')
+		{
+			Mat inpaintedImage;
+			inpaint(src1, inpaintMask, inpaintedImage, 3, INPAINT_TELEA);
+			imshow("图像修补效果图", inpaintedImage);
+		}
+	}
+}
+
 int imageCountAndInpaint::imreadImage() {
 	Mat src = imread("1.jpg");
 	imshow("测试", src);
@@ -254,5 +280,23 @@ static void on_Mouse(int event, int x, int y, int flags, void*) {
 		line(g_src, prevPt, pt, Scalar::all(255), 5, 8, 0);
 		prevPt = pt;
 		imshow("原图", g_src);
+	}
+}
+
+static void on_Mouse2(int event, int x, int y, int flags, void*) {
+	//处理鼠标左键相关消息
+	if (event == EVENT_LBUTTONUP || !(flags & EVENT_FLAG_LBUTTON))
+		prevPt = Point(-1, -1);
+	else if (event == EVENT_LBUTTONDOWN)
+		prevPt = Point(x, y);
+	//鼠标左键按下开始移动，绘制白色线条
+	else if (event == EVENT_MOUSEMOVE && (flags & EVENT_FLAG_LBUTTON)) {
+		Point pt(x, y);
+		if (prevPt.x < 0)
+			prevPt = pt;
+		line(inpaintMask, prevPt, pt, Scalar::all(255), 5, 8, 0);
+		line(src1, prevPt, pt, Scalar::all(255), 5, 8, 0);
+		prevPt = pt;
+		imshow("原图", src1);
 	}
 }
