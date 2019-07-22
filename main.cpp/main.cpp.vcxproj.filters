@@ -18,5 +18,38 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="imageCountAndInpaint.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="imageDue.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imageCountAndInpaint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imageDue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="imageDue.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="E:\Program Files\imageDue\1.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="E:\Program Files\imageDue\2.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
