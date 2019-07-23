@@ -1,6 +1,5 @@
 #include<opencv.hpp>
 #include<iostream>
-#include"resource.h"
 using namespace cv;
 using namespace std;
 

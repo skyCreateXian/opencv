@@ -140,12 +140,14 @@
     <ClCompile Include="imageCountAndInpaint.cpp" />
     <ClCompile Include="imageDue.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="straightAndMatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imageCountAndInpaint.h" />
     <ClInclude Include="imageDue.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="straightAndMatch.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="imageDue.rc" />

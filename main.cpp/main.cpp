@@ -16,12 +16,15 @@ int main() {
 
 
 	//Í¼ÏñÂÖÀª±ä»»
-	imageCountAndInpaint imageCount;
+	//imageCountAndInpaint imageCount;
 	//imageCount.findContoursTest();
 	//imageCount.convexHullTest();
 	//imageCount.findContoursEdge();
 	//imageCount.watershedImageTest();
 	//imageCount.helloworld();
-	imageCount.imageInpaint();
+	//imageCount.imageInpaint();
 
+	//Ö±·½Í¼ÓëÄ£°åÆ¥Åä
+	straightAndMatch temp;
+	temp.paintHSMap();
 }

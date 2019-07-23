@@ -1,5 +1,6 @@
 #include "imageCountAndInpaint.h"
 #include"imageDue.h"
+#include"straightAndMatch.h"
 using namespace std;
 
 /*
