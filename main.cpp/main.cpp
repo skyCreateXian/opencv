@@ -26,5 +26,7 @@ int main() {
 
 	//直方图与模板匹配
 	straightAndMatch temp;
-	temp.paintHSMap();
+	//temp.paintHSMap();
+	//temp.paintOneMap();
+	temp.paintThreeMap();
 }

@@ -18,6 +18,7 @@ void straightAndMatch::paintHSMap()
 	float satRanges[] = { 0,255 };
 
 	const float* ranges[] = { hueRanges,satRanges };
+	//MatND用于存储直方图的一种数据结构
 	MatND dstHist;
 	//calcHist函数中将计算第0通道和第一通道的直方图
 
@@ -57,11 +58,11 @@ void straightAndMatch::paintHSMap()
 			//长方形绘制函数
 			rectangle(
 				histImg,
-				Point(hue * scale, saturation * scale),
-				Point((hue + 1) * scale - 1,
+				Point(hue * scale, saturation * scale),//矩形上对角点
+				Point((hue + 1) * scale - 1,//矩形下对角点
 				(saturation + 1) * scale - 1),
-				Scalar::all(intensity),
-				FILLED
+				Scalar::all(intensity),//举行颜色
+				FILLED//线的厚度
 			);
 		}
 	}
@@ -72,10 +73,94 @@ void straightAndMatch::paintHSMap()
 
 void straightAndMatch::paintOneMap()
 {
+	Mat src = imread("1.jpg");
+	imshow("原图", src);
+
+	MatND dstHist;
+	int dims = 1;
+	float hranges[] = { 0,255 };
+	const float *ranges[] = { hranges };//const类型只读，const类型博大精深，在这里理解为只读
+	int size = 256;
+	int channels = 0;
+
+	//计算图像直方图
+	calcHist(&src,//输入数组
+		1,//输入数组个数
+		&channels,//需要统计的通道索引
+		Mat(),//掩码
+		dstHist,//输出数组
+		dims,//直方图维度
+		&size,//存放每个维度的直方图尺寸的数组
+		ranges);//每个维度取值范围
+	int scale = 1;
+	Mat dstImg(size * scale, size, CV_8U, Scalar(0));//生成256*256的灰度图像
+
+	double maxValue = 0;
+	double minValue = 0;
+	minMaxLoc(dstHist, &minValue, &maxValue, 0, 0);//查找数组和子数组的全局最小值和最大值存入maxValue
+	
+	//绘制直方图
+	int hpt = saturate_cast<int>(0.9 * size);//取整==cvRound
+	for (int i = 0; i < 256; i++)
+	{
+		float binValue = dstHist.at<float>(i);//访问像素值
+		int realValue = saturate_cast<int>(binValue * hpt / maxValue);//像素同步缩小，使最大像素值为1
+		rectangle(dstImg, Point(i * scale, size - 1), Point((i + 1) * scale - 1, size - realValue), Scalar(255));
+	}
+	imshow("一维直方图", dstImg);
+	waitKey(0);
+
 }
 
 void straightAndMatch::paintThreeMap()
 {
+	Mat src;
+	src = imread("1.jpg");
+	imshow("原图", src);
+
+	//参数
+	int bins = 256;
+	int hist_size[] = { bins };
+	float range[] = { 0,256 };
+	const float* ranges[] = { range };
+	MatND redHist, grayHist, blueHist;
+
+	//直方图的计算 三色
+	int channels_r[] = { 0 };
+	calcHist(&src, 1, channels_r, Mat(), redHist, 1, hist_size, ranges, true, false);
+	
+	int channels_g[] = { 1 };
+	calcHist(&src, 1, channels_g, Mat(), grayHist, 1, hist_size, ranges, true, false);
+
+	int channels_b[] = { 2 };
+	calcHist(&src, 1, channels_b, Mat(), blueHist, 1, hist_size, ranges, true, false);
+	//
+	double maxValue_red, maxValue_green, maxValue_blue;
+	minMaxLoc(redHist, 0, &maxValue_red, 0, 0);
+	minMaxLoc(grayHist, 0, &maxValue_green, 0, 0);
+	minMaxLoc(blueHist, 0, &maxValue_blue, 0, 0);
+	int scale = 1;
+	int histHeight = 256;
+	Mat histImg = Mat::zeros(histHeight, bins * 3, CV_8UC3);
+
+	//绘制
+	for (int i = 0; i < bins; i++)
+	{
+		float binValue_red = redHist.at<float>(i);
+		float binValue_green = grayHist.at<float>(i);
+		float binValue_blue = blueHist.at<float>(i);
+		int intensity_red = cvRound(binValue_red * histHeight / maxValue_red);
+		int intensity_green = cvRound(binValue_green * histHeight / maxValue_green);
+		int intensity_blue = cvRound(binValue_blue * histHeight / maxValue_blue);
+
+		rectangle(histImg, Point(i * scale, histHeight - 1), Point((i + 1) * scale - 1, histHeight - intensity_red),Scalar(255,0,0));
+		rectangle(histImg, Point((i + bins) * scale, histHeight - 1), Point((i + bins + 1) * scale - 1, histHeight - intensity_green), Scalar(0, 255, 0));
+		rectangle(histImg, Point((i + 2 * bins) * scale, histHeight - 1), Point((i + 2 * bins + 1) * scale - 1, histHeight - intensity_blue), Scalar(0, 0, 255));
+	}
+
+	//在窗口中显示出绘制好的直方图
+	imshow("图像中的RGBz直方图", histImg);
+	waitKey(0);
 }
 
 void straightAndMatch::compareMap()
